@@ -1,0 +1,17 @@
+events {}
+
+http {
+    upstream k3smaster {
+        server master01.lan;
+        server master02.lan;
+    }
+
+    server {
+        listen 80;
+
+        location / {
+            proxy_pass http://k3smaster;
+        }
+    }
+}
+
