@@ -34,7 +34,7 @@ GRANT ALL PRIVILEGES ON *.* TO 'k3s-admin'@'%';
 # Prepare the postgresql datastore
 ## Create an external DB
 ```
-docker run --name k3s-postgres -e POSTGRES_PASSWORD=k3s-sql-secret -p 5432:5432 -d mak3r/k3s-postgres:12.2
+docker run --name k3s-postgres --restart unless-stopped -e POSTGRES_PASSWORD=k3s-sql-secret -p 5432:5432 -d mak3r/k3s-postgres:12.2
 ```
 ## Check that the k3s db was created
 ```
@@ -53,21 +53,21 @@ select datname from pg_database;
 
 ## for mysql backing store
 Run this command on both nodes
-* `curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --write-kubeconfig-mode 644 --datastore-endpoint mysql://k3s-admin:k3s-admin-pw@tcp(mak3r:3306)/k3sdb -t agent-secret --tls-san mak3r.lan" INSTALL_K3S_VERSION="v1.17.2+k3s1" sh -`
+* `curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --write-kubeconfig-mode 644 --datastore-endpoint mysql://k3s-admin:k3s-admin-pw@tcp(mak3r:3306)/k3sdb -t agent-secret --tls-san mak3r.lan" INSTALL_K3S_VERSION="v1.17.3+k3s1" sh -`
 ## Alternate for setting server nodes as master only
-* `curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--write-kubeconfig-mode 644 --datastore-endpoint mysql://k3s-admin:k3s-admin-pw@tcp(mak3r:3306)/k3sdb -t agent-secret --tls-san mak3r.lan --node-taint k3s-controlplane=true:NoExecute" INSTALL_K3S_VERSION="v1.17.2+k3s1" sh -`
+* `curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--write-kubeconfig-mode 644 --datastore-endpoint mysql://k3s-admin:k3s-admin-pw@tcp(mak3r:3306)/k3sdb -t agent-secret --tls-san mak3r.lan --node-taint k3s-controlplane=true:NoExecute" INSTALL_K3S_VERSION="v1.17.3+k3s1" sh -`
 
 ## for postgresql backing store
 Run this command on both nodes
-* `curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --write-kubeconfig-mode 644 --datastore-endpoint postgres://postgres:k3s-sql-secret@build-box:5432/k3sdb?sslmode=disable -t agent-secret --tls-san mak3r.lan" INSTALL_K3S_VERSION="v1.17.2+k3s1" sh -`
+* `curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="server --write-kubeconfig-mode 644 --datastore-endpoint postgres://postgres:k3s-sql-secret@build-box:5432/k3sdb?sslmode=disable -t agent-secret --tls-san mak3r.lan" INSTALL_K3S_VERSION="v1.17.3+k3s1" sh -`
 ## Alternate for setting server nodes as master only
-* `curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--write-kubeconfig-mode 644 --datastore-endpoint postgres://postgres:k3s-sql-secret@build-box:5432/k3sdb?sslmode=disable -t agent-secret --tls-san mak3r.lan --node-taint k3s-controlplane=true:NoExecute" INSTALL_K3S_VERSION="v1.17.2+k3s1" sh -`
+* `curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="--write-kubeconfig-mode 644 --datastore-endpoint postgres://postgres:k3s-sql-secret@build-box:5432/k3sdb?sslmode=disable -t agent-secret --tls-san mak3r.lan --node-taint k3s-controlplane=true:NoExecute" INSTALL_K3S_VERSION="v1.17.3+k3s1" sh -`
 
 # Configure the fixed registration address
 * `docker run --name nginx-k3s-reg-addr -v /Users/markabrams/dev/k3s-advanced-class/nginx:/etc/nginx:ro -p 6443:6443 -p 443:443 -p 80:80 --restart unless-stopped -d nginx:stable`
 
 # Join workers
-* `curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="agent -t agent-secret --server https://master02.lan:6443" INSTALL_K3S_VERSION="v1.17.2+k3s1" sh -`
+* `curl -sfL https://get.k3s.io | INSTALL_K3S_EXEC="agent -t agent-secret --server https://master02.lan:6443" INSTALL_K3S_VERSION="v1.17.3+k3s1" sh -`
 
 ---
 
